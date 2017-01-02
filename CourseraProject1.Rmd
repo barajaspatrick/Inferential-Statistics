@@ -1,0 +1,58 @@
+---
+title: "Coursera Course Project Part 1"
+author: "Patrick"
+date: "12/28/2016"
+output: html_document
+---
+
+## Part 1
+```{r}
+
+## set parameters
+numsim <- 1000
+n <- 40
+lambda <- .20
+set.seed(123)
+
+simulation1 <- matrix(rexp(numsim*n, rate = lambda), numsim)
+simulationmeans <- apply(simulation1, 1, mean)
+
+hist(simulationmeans)
+
+```
+
+# 1.1 Theoretical distribution vs sample distribution
+no we compare the distributions of the sample mean versus the theoretical mean
+```{r}
+
+actual_mean <- mean(simulationmeans)
+theoretical_mean <- 1/lambda
+print(actual_mean)
+print(theoretical_mean)
+
+```
+the sample mean (5.01) approximates the theoretical mean (5.0), not quite the same but almost.
+
+
+# 1.2 Theoretical Variance vs Sample Variance
+```{r}
+
+sample_variance <- var(simulationmeans)
+theoretical_variance <- (1/lambda)^2/n
+print(sample_variance)
+print(theoretical_variance)
+
+```
+Again the sample mean (.608) approximates the theoretical variance ( .625)
+
+# 1.3 demonstrate distribution approximates normal distribution
+```{r}
+hist(simulationmeans)
+```
+from the looks of the graph our data does indeed seem to be normaly distributed.
+
+We can run a run a Shapiro-Wilk test to support our observation.
+```{r}
+shapiro.test(simulationmeans)
+```
+

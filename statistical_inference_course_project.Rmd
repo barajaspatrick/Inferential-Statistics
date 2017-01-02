@@ -1,0 +1,120 @@
+---
+output: pdf_document
+---
+## Part 1
+```{r}
+
+## set parameters
+numsim <- 1000
+n <- 40
+lambda <- .20
+set.seed(123)
+
+simulation1 <- matrix(rexp(numsim*n, rate = lambda), numsim)
+simulationmeans <- apply(simulation1, 1, mean)
+
+hist(simulationmeans)
+
+```
+
+# 1.1 Theoretical distribution vs sample distribution
+no we compare the distributions of the sample mean versus the theoretical mean
+```{r}
+
+actual_mean <- mean(simulationmeans)
+theoretical_mean <- 1/lambda
+print(actual_mean)
+print(theoretical_mean)
+
+```
+the sample mean (5.01) approximates the theoretical mean (5.0), not quite the same but almost.
+
+
+# 1.2 Theoretical Variance vs Sample Variance
+```{r}
+
+sample_variance <- var(simulationmeans)
+theoretical_variance <- (1/lambda)^2/n
+print(sample_variance)
+print(theoretical_variance)
+
+```
+Again the sample mean (.608) approximates the theoretical variance ( .625)
+
+# 1.3 demonstrate distribution approximates normal distribution
+```{r}
+hist(simulationmeans)
+```
+from the looks of the graph our data does indeed seem to be normaly distributed.
+
+We can run a run a Shapiro-Wilk test to support our observation.
+```{r}
+shapiro.test(simulationmeans)
+```
+
+
+## Part 2 Tooth Growth Data
+
+For the second part of the course project we are to compare the tooth growth data
+for two groups; groups that took 'OJ' supp, and another group that took 'VC' supp.
+these comparisons will be made at three seperate levels, depending on the dosage
+taken by the participants (.5, 1 or 2)
+
+
+# Data summary regarding dosage
+
+First we will explor the data by comparing the two seperate groups with regards to dosage
+```{r}
+library(datasets) 
+library(ggplot2) 
+
+g <- ggplot(ToothGrowth, aes(factor(dose), len )) +
+                        geom_boxplot() + facet_grid(.~supp)
+print(g)
+
+```
+there apprears to be a upwards trend in both groups as dosage increases. 'Supp' also
+seems to affect the groups differently for the first two dosages.
+
+# Subsetting data
+next we will subset our dataframe by dosage amount so we can run t-tests and compare the different groups.
+```{r}
+
+data(ToothGrowth) 
+doseGrowth1 <- subset(ToothGrowth, dose == 0.5) 
+doseGrowth2 <- subset(ToothGrowth, dose == 1)
+doseGrowth3 <- subset(ToothGrowth, dose == 2)
+
+```
+
+now that we have subset our toothGrowth dataset with regards to dose, we will 
+now conduct three tests to determine if there is a difference between 'OJ'
+and 'VC" supp groups:
+
+test1
+h0: dosegrowth1(VC) = dosegrowth1(OJ)
+test2
+h0: dosegrowth2(VC) = dosegrowth2(OJ)
+test3
+h0: dosegrowth3(VC) = dosegrowth3(OJ)
+
+# Test1
+```{r}
+t.test(len~supp, data = doseGrowth1)
+```
+The results of this t-test seem to indicate for a dose of .5 there is a 
+significant difference between the two supp groups (p<.05).
+
+# Test2
+```{r}
+t.test(len~supp, data = doseGrowth2)
+```
+The results of this t-test seem to indicate for a dose of 1 there is a 
+significant difference between the two supp groups (p<.05).
+
+# Test3
+```{r}
+t.test(len~supp, data = doseGrowth3)
+```
+for the last dosage group there does not seem to be a difference between
+the two groups (p>.05) therefore the null hypothesis is not rejected.
