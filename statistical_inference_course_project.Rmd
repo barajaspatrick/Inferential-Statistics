@@ -1,5 +1,7 @@
 ---
-output: pdf_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 ## Part 1
 ```{r}
@@ -18,7 +20,7 @@ hist(simulationmeans)
 ```
 
 # 1.1 Theoretical distribution vs sample distribution
-no we compare the distributions of the sample mean versus the theoretical mean
+now we compare the distributions of the sample mean versus the theoretical mean
 ```{r}
 
 actual_mean <- mean(simulationmeans)
